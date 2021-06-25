@@ -38,6 +38,8 @@ run either the docker container or the raw application binary
 
 ```
 curl http://localhost:8080/health
+curl -X POST http://localhost:8080/foo/_search -d '{"query":{"match":{"ticker":"GOOG"}}}'
+
 ```
 
 ---

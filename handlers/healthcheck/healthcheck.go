@@ -2,7 +2,6 @@ package healthcheck
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis/v8"
@@ -16,7 +15,6 @@ func HealthCheck(c *gin.Context) {
 			"message": "Cannot get redisConn",
 		})
 	}
-	fmt.Printf("%+v\n", redisConn)
 
 	_, err := redisConn.Ping(ctx).Result()
 	if err != nil {
