@@ -10,14 +10,27 @@ import json
 
 from elasticsearch import Elasticsearch
 
-es = Elasticsearch()
-esres = es.search(index="instruments", body={"query": {"match_all": {}}})
+for x in ['{"query": {"match_all": {}}}','{"query":{"query_string":{"query":"MSBHF OR GOOG","default_field":"instrument"}}}']:
 
+    # Query elasticsearch
+    es = Elasticsearch()
+    esres = es.search(index="instruments", body=x)
+    
+    
+    # Query the proxy
+    proxy = Elasticsearch([
+        {'host': 'localhost', 'port': 8080},
+    ])
+    proxyres = proxy.search(index="instruments", body=x)
+    
+    d = diff(esres, proxyres)
+    print("Query: ", x)
+    
+    if len(d) > 0:
+        print("\t", d)
+    else:
+        print("\tNo differences")
+    
 
-proxy = Elasticsearch([
-    {'host': 'localhost', 'port': 8080},
-])
-proxyres = proxy.search(index="instruments", body={"query": {"match_all": {}}})
+    { "query": { "query_string": { "query": "MSBHF OR GOOG", "default_field": "instrument" } } }
 
-
-print(diff(esres, proxyres))

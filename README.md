@@ -38,7 +38,11 @@ run either the docker container or the raw application binary
 
 ```
 curl http://localhost:8080/health
-curl -X POST http://localhost:8080/foo/_search -d '{"query":{"match":{"ticker":"GOOG"}}}'
+
+#check the proxy
+curl --header 'Content-Type: application/json' -X POST http://localhost:8080/instruments/_search -d '{"query": {"match_all": {}}}'  |jq
+#check the source
+curl --header 'Content-Type: application/json' -X POST http://localhost:9200/instruments/_search -d '{"query": {"match_all": {}}}'  |jq
 
 ```
 

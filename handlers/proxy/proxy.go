@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"strings"
+	"time"
 
 	"github.com/go-redis/redis/v8"
 
@@ -76,11 +78,24 @@ func Proxy(c *gin.Context) {
 			if err := json.NewDecoder(sres.Body).Decode(&esResponse); err != nil {
 				fmt.Printf("Error parsing the response body: %s", err)
 			}
-			//fmt.Printf("%+v\n", sres)
+			jsonString, _ := json.Marshal(esResponse)
+			_, xerr := redisConn.SetNX(
+				ctx,
+				fmt.Sprintf("%x", (jsonQueryHash.Sum(nil))),
+				jsonString,
+				10*time.Second,
+			).Result()
+			if xerr != nil {
+				fmt.Printf("ERROR SETTING %+v\n", xerr)
+			}
+			c.Header("X-Cache", "0")
 			c.JSON(200, esResponse)
 		} else {
-			//print(res)
-			c.JSON(200, res)
+			if err := json.NewDecoder(strings.NewReader(res)).Decode(&esResponse); err != nil {
+				fmt.Printf("Error parsing the response body: %s", err)
+			}
+			c.Header("X-Cache", "1")
+			c.JSON(200, esResponse)
 		}
 	}
 }
