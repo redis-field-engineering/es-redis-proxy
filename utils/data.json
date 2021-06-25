@@ -1,0 +1,3 @@
+{ "instrument": "GOOG", "price": 25521.13, "watchlists": ["MAINLIST"], "tickers": { "exchange": "NASDAQ", "subindex": ["SPX", "NDX"] } }
+{ "instrument": "NPNYY", "price": 10.27,  "watchlists": [], "tickers": { "exchange": "TSE", "subindex": ["TOPIX"] } }
+{ "instrument": "MSBHF", "price": 27.04, "watchlists": [], "tickers": { "exchange": "TSE", "subindex": ["TOPIX"] } }
