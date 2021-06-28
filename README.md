@@ -1,6 +1,6 @@
-# es-redis-proxy
+# es-redis
 
-A caching proxy for Elasticsearch requests
+A caching proxy for Elasticsearch query requests
 
 ## Building
 
@@ -22,14 +22,14 @@ A caching proxy for Elasticsearch requests
 ### Mac/Linux
 
 ```
-./es-redis-proxy
+./es-redis
 ```
 
 ### Docker
 
 ```
-docker pull maguec/es-redis-proxy:latest
-docker run -i -t -p 8080:8080 maguec/es-redis-proxy
+docker pull maguec/es-redis:latest
+docker run -i -t -p 8080:8080 maguec/es-redis
 ```
 
 ## Testing
