@@ -24,6 +24,10 @@ for x in ['{"query": {"match_all": {}}}','{"query":{"query_string":{"query":"MSB
     proxyres = proxy.search(index="instruments", body=x)
     
     d = diff(esres, proxyres)
+
+    # delet the took as it's going to be different with the cache version
+    if 'took' in d: del d['took']
+
     print("Query: ", x)
     
     if len(d) > 0:

@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/RedisLabs-Field-Engineeringc/es-redis-proxy/handlers/config"
 	"github.com/go-redis/redis/v8"
 
 	"crypto/sha256"
@@ -28,6 +29,13 @@ func Proxy(c *gin.Context) {
 	if !ok {
 		c.JSON(500, gin.H{
 			"message": "Cannot get redisConn",
+		})
+	}
+
+	esProxyConfig, cok := c.MustGet("esProxyConfig").(*config.ESProxyConfig)
+	if !cok {
+		c.JSON(500, gin.H{
+			"message": "Cannot get configuration",
 		})
 	}
 
@@ -83,7 +91,7 @@ func Proxy(c *gin.Context) {
 				ctx,
 				fmt.Sprintf("%x", (jsonQueryHash.Sum(nil))),
 				jsonString,
-				10*time.Second,
+				time.Duration(esProxyConfig.RedisTTL)*time.Second,
 			).Result()
 			if xerr != nil {
 				fmt.Printf("ERROR SETTING %+v\n", xerr)
