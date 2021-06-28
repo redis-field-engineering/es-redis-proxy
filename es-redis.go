@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/RedisLabs-Field-Engineeringc/es-redis-proxy/gears"
 	"github.com/RedisLabs-Field-Engineeringc/es-redis-proxy/handlers/app"
 	"github.com/RedisLabs-Field-Engineeringc/es-redis-proxy/handlers/config"
 	"github.com/RedisLabs-Field-Engineeringc/es-redis-proxy/handlers/healthcheck"
@@ -51,6 +52,8 @@ func main() {
 
 	router.Use(APIMiddleware(redisClient))
 	router.Use(SetConfigCtx(config))
+
+	gears.LoadGears(redisClient, "./gears/esSearch.py")
 
 	logrus.SetFormatter(&logrus.JSONFormatter{})
 	router.Use(ginrus.Ginrus(logrus.StandardLogger(), time.RFC3339, true, "es-redis"))
