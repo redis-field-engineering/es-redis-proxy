@@ -64,7 +64,6 @@ func Proxy(c *gin.Context) {
 		c.JSON(500, terr)
 	} else {
 		json.Unmarshal([]byte(trigger.([]interface{})[0].(string)), &tr)
-		fmt.Printf("%+v\n", tr)
 		c.Header("X-Cache-TTL", fmt.Sprintf("%d", tr.TTL))
 		c.Header("X-Cache-Status", tr.CacheStatus)
 		c.Header("X-Cache-Upstream", fmt.Sprintf("%d", tr.ExitCode))
