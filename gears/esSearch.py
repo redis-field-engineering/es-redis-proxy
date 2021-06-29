@@ -10,15 +10,15 @@ def fetch_and_load(sha, index, query, ttl):
     try:
         es = Elasticsearch(hosts="es")
         res = es.search(index=index, body=query)
-        execute("SETEX", "{}:{}".format(index, sha), ttl, json.dumps(res))
+        execute("SETEX", "es-proxy:{}:{}".format(index, sha), ttl, json.dumps(res))
         return(res, 0)
     except Exception as res:
         return(res.error, 1)
 
 def runIt(x):
-    w = execute("GET", "{}:{}".format(x[2],x[1]))
+    w = execute("GET", "es-proxy:{}:{}".format(x[2],x[1]))
     if w :
-        t = execute("TTL", "{}:{}".format(x[2],x[1]))
+        t = execute("TTL", "es-proxy:{}:{}".format(x[2],x[1]))
         j = json.loads(w)
         out = {"result": j, "ttl": t, "exit_code": 0}
     else:
