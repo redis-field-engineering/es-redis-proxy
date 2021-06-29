@@ -20,10 +20,10 @@ def runIt(x):
     if w :
         t = execute("TTL", "es-proxy:{}:{}".format(x[2],x[1]))
         j = json.loads(w)
-        out = {"result": j, "ttl": t, "exit_code": 0}
+        out = {"result": j, "ttl": t, "exit_code": 0, "cache_status": "hit"}
     else:
         res, exit_code = fetch_and_load(x[1], x[2], x[3], x[4])
-        out = {"result": res, "ttl": x[4], "exit_code": exit_code}
+        out = {"result": res, "ttl": x[4], "exit_code": exit_code, "cache_status": "miss"}
 
     return(json.dumps(out))
 

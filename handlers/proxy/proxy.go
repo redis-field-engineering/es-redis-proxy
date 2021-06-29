@@ -13,9 +13,10 @@ import (
 )
 
 type TriggerResponse struct {
-	Result   interface{} `json:"result"`
-	TTL      int         `json:"ttl"`
-	ExitCode int         `json:"exit_code"`
+	Result      interface{} `json:"result"`
+	TTL         int         `json:"ttl"`
+	ExitCode    int         `json:"exit_code"`
+	CacheStatus string      `json:"cache_status"`
 }
 
 func Proxy(c *gin.Context) {
@@ -61,12 +62,16 @@ func Proxy(c *gin.Context) {
 	).Result()
 	if terr != nil {
 		c.JSON(500, terr)
-		//	} else if trigger[2] > 0 {
-		//		c.JSON(500, gin.H{"error": "Unknown"})
 	} else {
 		json.Unmarshal([]byte(trigger.([]interface{})[0].(string)), &tr)
 		fmt.Printf("%+v\n", tr)
-		c.Header("X-Cache", fmt.Sprintf("%d", tr.TTL))
-		c.JSON(200, tr.Result)
+		c.Header("X-Cache-TTL", fmt.Sprintf("%d", tr.TTL))
+		c.Header("X-Cache-Status", tr.CacheStatus)
+		c.Header("X-Cache-Upstream", fmt.Sprintf("%d", tr.ExitCode))
+		httpStatus := 503
+		if tr.ExitCode < 1 {
+			httpStatus = 200
+		}
+		c.JSON(httpStatus, tr.Result)
 	}
 }
