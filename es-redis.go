@@ -54,6 +54,9 @@ func main() {
 	router.Use(SetConfigCtx(config))
 
 	gears.LoadGears(redisClient, "./gears/esSearch.py")
+	if config.ReCacheInterval > -1 {
+		gears.LoadGears(redisClient, "./gears/reCache.py")
+	}
 
 	logrus.SetFormatter(&logrus.JSONFormatter{})
 	router.Use(ginrus.Ginrus(logrus.StandardLogger(), time.RFC3339, true, "es-redis"))

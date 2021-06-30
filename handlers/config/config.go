@@ -6,12 +6,13 @@ import (
 )
 
 type ESProxyConfig struct {
-	RedisHost     string
-	RedisPort     int
-	RedisPassword string
-	RedisTTL      int
-	EsHost        string
-	EsPort        int
+	RedisHost       string
+	RedisPort       int
+	RedisPassword   string
+	RedisTTL        int
+	EsHost          string
+	EsPort          int
+	ReCacheInterval int
 }
 
 func GetConfig() *ESProxyConfig {
@@ -49,6 +50,17 @@ func GetConfig() *ESProxyConfig {
 		}
 	} else {
 		conf.RedisTTL = 30
+	}
+
+	if len(os.Getenv("RECACHE_INTERVAL")) > 0 {
+		i, err := strconv.Atoi(os.Getenv("REDIS_TTL"))
+		if err == nil {
+			conf.ReCacheInterval = i
+		} else {
+			conf.ReCacheInterval = -1
+		}
+	} else {
+		conf.ReCacheInterval = -1
 	}
 
 	return (conf)

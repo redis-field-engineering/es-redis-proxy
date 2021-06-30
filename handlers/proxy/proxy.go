@@ -59,6 +59,7 @@ func Proxy(c *gin.Context) {
 		c.Param("index"),
 		jsonData,
 		esProxyConfig.RedisTTL,
+		esProxyConfig.ReCacheInterval,
 	).Result()
 	if terr != nil {
 		c.JSON(500, terr)
