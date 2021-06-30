@@ -6,7 +6,8 @@ import json
 def fetch_and_load(sha, index):
     try:
         rec = execute("HMGET", "es-proxy:recache:{}:{}".format(index, sha), "QUERY", "TTL")
-        execute("HSET", "LOG", "QUERY", rec[0], "TTL", rec[1])
+        if rec[0] == None or rec[1] == None:
+            return
         es = Elasticsearch(hosts="es")
         res = es.search(index=index, body=rec[0])
         execute("SETEX", "es-proxy:query:{}:{}".format(index, sha), rec[1], json.dumps(res))
