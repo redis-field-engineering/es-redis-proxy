@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from jsondiff import diff
+import requests
 
 # don't do this in production
 import warnings
@@ -10,7 +11,7 @@ import json
 
 from elasticsearch import Elasticsearch
 
-for x in ['{"query": {"match_all": {}}}','{"query":{"query_string":{"query":"MSBHF OR GOOG","default_field":"instrument"}}}']:
+for x in ['{"query": {"match_all": {}}}','{"query":{"query_string":{"query":"ZINC OR GOOG","default_field":"symbol"}}}']:
 
     # Query elasticsearch
     es = Elasticsearch()
@@ -37,4 +38,11 @@ for x in ['{"query": {"match_all": {}}}','{"query":{"query_string":{"query":"MSB
     
 
     { "query": { "query_string": { "query": "MSBHF OR GOOG", "default_field": "instrument" } } }
+
+print("Testing to make sure it is cached")
+
+r = requests.post('http://localhost:8080/instruments/_search', data='{"query":{"query_string":{"query":"ZSPH","default_field":"symbol"}}}')
+print(r.headers)
+r = requests.post('http://localhost:8080/instruments/_search', data='{"query":{"query_string":{"query":"ZSPH","default_field":"symbol"}}}')
+print(r.headers)
 
