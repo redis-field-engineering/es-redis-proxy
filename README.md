@@ -1,6 +1,11 @@
 # es-redis
 
-A caching proxy for Elasticsearch query requests
+A caching proxy for Elasticsearch query requests using Redis Gears.
+
+![architecture](docs/es-proxy.png)
+
+This will proxy and fetch search results from an upstream Elasticsearch server and cache.  The gear will then refresh the cache based on a global grace period for a configurable amount of time.
+
 
 ## Building
 
